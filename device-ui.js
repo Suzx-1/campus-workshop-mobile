@@ -3,7 +3,7 @@
   window.CampusDeviceUI=()=>{
     const profile=document.querySelector('.profile p');if(profile)profile.textContent='手机独立版 · 无需电脑在线';
     const settings=document.querySelector('.settings');if(settings&&!settings.querySelector('#device-backup'))settings.insertAdjacentHTML('beforeend','<div class="setting"><span>手机数据备份</span><button id="device-backup" data-device="export">导出备份</button></div><div class="setting"><span>从备份恢复</span><button data-device="import">选择文件</button><input type="file" id="device-import" accept="application/json,.json" hidden></div>');
-    const note=document.querySelector('.note');if(note)note.textContent='记录保存在当前手机浏览器，不与电脑或其他手机自动同步。清除网站数据、无痕模式或卸载浏览器可能丢失记录，请定期导出备份。修改代码仍在电脑端完成。';
+    const note=document.querySelector('.note');if(note)note.textContent='记录保存在当前手机浏览器，不与电脑或其他手机自动同步。清除网站数据、无痕模式或卸载浏览器可能丢失记录，请定期导出备份。修改代码仍在电脑端完成。';window.CampusUpdate?.mount();
   };
   document.addEventListener('click',async event=>{
     const el=event.target.closest('[data-device],[data-action="about"]');if(!el)return;
