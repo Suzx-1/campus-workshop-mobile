@@ -18,7 +18,7 @@ window.StudyStore=(()=>{
     list(d.cards,c=>text(c.front)&&text(c.back)&&day(c.due))&&
     list(d.references,r=>text(r.title)&&text(r.author)&&text(r.year)&&new URL(r.url).protocol==='https:')&&
     list(d.customCourses,c=>text(c.name)&&text(c.group)&&Array.isArray(c.tags)&&c.tags.every(text)&&['generic','calculus','drawing','linear','theory'].includes(c.tool)&&text(c.status)&&c.priority===false)&&
-    d.settings&&['inapp','notification','calendar','off'].includes(d.settings.reminder)&&/^([01]\d|2[0-3]):[0-5]\d$/.test(d.settings.time)&&
+    (d.drawingDraft===undefined||PhotoCore.validDraft(d.drawingDraft))&&(d.drawingModel===undefined||PhotoCore.validModel(d.drawingModel))&&d.settings&&['inapp','notification','calendar','off'].includes(d.settings.reminder)&&/^([01]\d|2[0-3]):[0-5]\d$/.test(d.settings.time)&&
     list(v.files,f=>text(f.name)&&!!fileType(f.name)&&text(f.content)&&f.content.length<=30*1024*1024&&/^data:[^,]*;base64,[A-Za-z0-9+/=]*$/.test(f.content))&&
     (d.files===undefined?v.files.length===0:list(d.files,f=>text(f.name)&&!!fileType(f.name)&&Number.isFinite(f.size)&&f.size>=0&&f.size<=20*1024*1024)&&d.files.length===v.files.length&&d.files.every(f=>v.files.some(b=>b.id===f.id&&b.name===f.name)));
   }catch{return false;}}
