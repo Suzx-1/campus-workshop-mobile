@@ -38,7 +38,44 @@ function find(){const list=active();const r=data.records.find(r=>r.id===selected
 function render(){const tab=location.hash.slice(1)||'parking';document.querySelectorAll('nav a').forEach(a=>{a.classList.toggle('active',a.hash==='#'+tab);if(a.hash==='#'+tab)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});$('#app').innerHTML=({history:historyPage,places,find}[tab]||home)();document.title=({history:'历史记录',places:'常用地点',find:'找车'}[tab]||'直接定位')+' · 停哪儿';}
 async function geo(onProgress){if(!window.isSecureContext)throw Error('请使用 HTTPS 手机网址，当前链接无法获取定位。');locationController=new AbortController();try{return await acquirePrecisePosition({signal:locationController.signal,onProgress});}finally{locationController=null;}}
 async function storeParking(position,preset){if(!hasCoords(position)||!Number.isFinite(position.accuracy)||position.accuracy<=0||position.accuracy>20)throw Error('该位置未达到 20 米要求，不会保存。请在现场重新直接定位。');const now=new Date().toISOString();const next=structuredClone(data);for(const r of next.records.filter(r=>!r.endedAt)){r.endedAt=now;r.endReason='replaced';}const record={id:uid(),location:preset?.location||'停车点 · '+fmt(now),campus:preset?.campus||'',notes:preset?.notes||'',vehicle:'other',vehicleName:'',photo:'',lat:position.lat,lng:position.lng,accuracy:position.accuracy,capturedAt:position.capturedAt||preset?.capturedAt||null,parkedAt:now,endedAt:null,endReason:null};next.records.unshift(record);await save(next);selectedId=record.id;direction=null;render();notify('停车位置已保存 · 设备估计误差 '+Math.ceil(position.accuracy)+' 米');}
-function nav(r){const name=[r.campus,r.location].filter(Boolean).join(' ');const amap=hasCoords(r)?`https://uri.amap.com/navigation?to=${r.lng},${r.lat},${encodeURIComponent(name)}&mode=walk&coordinate=wgs84&src=campus-parking&callnative=0`:`https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&city=${encodeURIComponent('郑州')}&callnative=0`;const baidu=hasCoords(r)?`https://api.map.baidu.com/direction?origin=${encodeURIComponent('我的位置')}&destination=${encodeURIComponent('latlng:'+r.lat+','+r.lng+'|name:'+name)}&mode=walking&coord_type=wgs84&region=${encodeURIComponent('郑州')}&output=html`:`https://api.map.baidu.com/geocoder?address=${encodeURIComponent(name)}&output=html`;modal('导航找车',`<p class="dialog-note">${E(name)}</p><div class="actions"><a class="btn green" href="${E(amap)}" target="_blank" rel="noopener noreferrer">高德地图 ↗</a><a class="btn" href="${E(baidu)}" target="_blank" rel="noopener noreferrer">百度地图 ↗</a></div><p class="dialog-note">${hasCoords(r)?'打开地图后确认步行路线，校园内小路请结合现场判断。':'这条旧记录没有坐标，会先搜索地点。'}</p>`);}
+function quickOrigin(timeoutMs=8000){
+  return new Promise(resolve=>{
+    let settled=false;
+    const done=value=>{if(!settled){settled=true;resolve(value);}};
+    if(!window.isSecureContext||!navigator.geolocation){done(null);return;}
+    const guard=setTimeout(()=>done(null),timeoutMs+800);
+    try{
+      navigator.geolocation.getCurrentPosition(p=>{clearTimeout(guard);done({lat:p.coords.latitude,lng:p.coords.longitude,accuracy:p.coords.accuracy});},()=>{clearTimeout(guard);done(null);},{enableHighAccuracy:true,maximumAge:30000,timeout:timeoutMs});
+    }catch{clearTimeout(guard);done(null);}
+  });
+}
+async function nav(r){
+  const name=[r.campus,r.location].filter(Boolean).join(' ');
+  const hasTarget=hasCoords(r);
+  const note=hasTarget?'打开地图后确认步行路线，校园内小路请结合现场判断。':'这条旧记录没有坐标，会先搜索地点。';
+  modal('导航找车',`<p class="dialog-note">${E(name)}</p><div id="nav-state" class="dialog-note">${hasTarget?'正在获取你的当前位置…':'正在准备搜索…'}</div><div class="actions" id="nav-actions"></div><p class="dialog-note">${note}</p>`);
+  try{
+    if(!hasTarget){
+      const state=$('#nav-state'),actions=$('#nav-actions');
+      if(!state||!actions)return;
+      state.textContent='这条记录没有坐标，将按地点名称搜索。';
+      const search=`https://uri.amap.com/search?keyword=${encodeURIComponent(name)}&city=${encodeURIComponent('郑州')}&callnative=0`;
+      const baiduSearch=`https://api.map.baidu.com/geocoder?address=${encodeURIComponent(name)}&output=html`;
+      actions.innerHTML=`<a class="btn green" href="${E(search)}" target="_blank" rel="noopener noreferrer">高德地图 ↗</a><a class="btn" href="${E(baiduSearch)}" target="_blank" rel="noopener noreferrer">百度地图 ↗</a>`;
+      return;
+    }
+    const origin=await quickOrigin();
+    const state=$('#nav-state'),actions=$('#nav-actions');
+    if(!state||!actions)return;
+    const target=wgs84ToGcj02(r.lat,r.lng);
+    const start=origin?wgs84ToGcj02(origin.lat,origin.lng):null;
+    const web=buildAmapWebUrl({from:start,to:target,toName:name});
+    const app=buildAmapAppUrl({from:start,to:target,toName:name});
+    const baidu=buildBaiduUrl({from:start?gcj02ToBd09(start.lat,start.lng):null,to:gcj02ToBd09(target.lat,target.lng),toName:name});
+    state.textContent=start?`起点已用当前位置（±${Math.ceil(origin.accuracy)} 米）`:'没能读到当前位置：请在浏览器里允许定位后重试，否则高德会要求手动输入起点。';
+    actions.innerHTML=`<a class="btn green" href="${E(web)}" target="_blank" rel="noopener noreferrer">高德地图 ↗</a><a class="btn" href="${E(app)}" rel="noopener noreferrer">高德 App ↗</a><a class="btn" href="${E(baidu)}" target="_blank" rel="noopener noreferrer">百度地图 ↗</a>`;
+  }catch(err){notify(err.message,true);}
+}
 function details(r){modal('停车记录',`<dl class="detail-grid"><dt>位置</dt><dd>${E(r.location)}</dd><dt>停车时间</dt><dd>${fmt(r.parkedAt)}</dd><dt>状态</dt><dd>${r.endedAt?(r.endReason==='replaced'?'已更新位置':'已取车'):'正在停车'}</dd>${hasCoords(r)?`<dt>坐标</dt><dd>${r.lat.toFixed(6)}, ${r.lng.toFixed(6)}</dd>`:''}${r.notes?`<dt>旧记录备注</dt><dd>${E(r.notes)}</dd>`:''}</dl><div class="form-actions">${B('删除记录','delete','trash','danger small',r.id)}${B('找车','record-find','arrow','green',r.id)}</div>`);}
 document.addEventListener('click',async event=>{const el=event.target.closest('[data-action]');if(!el||el.disabled)return;const a=el.dataset.action,id=el.dataset.id,r=data.records.find(x=>x.id===id),p=data.places.find(x=>x.id===id);if(a==='cancel-location'){locationController?.abort();return;}if(a==='close')return close();if(busy)return;
   try{
