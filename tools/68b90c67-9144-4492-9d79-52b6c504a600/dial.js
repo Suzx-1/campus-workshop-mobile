@@ -1,0 +1,31 @@
+'use strict';
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.RecordingDial=api;})(globalThis,function(){
+ const modes=[['polish','整理全文','document'],['cleanup','建议精简','scissors'],['summary','重点简版','list'],['highlights','标注重点','marker'],['mindmap','思维导图','map'],['explain','解析讲解','chat']];
+ const paths={document:'M7 3h8l4 4v14H5V3h2m7 0v5h5M8 12h8M8 16h6',scissors:'M9 9l11 11M9 15L20 4M5 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6m0 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6',marker:'m5 15 9-11 6 5-9 11-7 1 1-6m4-5 6 5M4 22h16',list:'M9 6h11M9 12h8M9 18h11M4 6h.01M4 12h.01M4 18h.01',map:'M8 12h6m0 0 4-6m-4 6 4 6M4 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6m16-7a3 3 0 1 0 0 6 3 3 0 0 0 0-6m0 13a3 3 0 1 0 0 6 3 3 0 0 0 0-6',chat:'M4 4h16v13H9l-5 4V4m4 5h8m-8 4h5',mic:'M9 5a3 3 0 0 1 6 0v7a3 3 0 0 1-6 0V5m-3 6v1a6 6 0 0 0 12 0v-1M12 18v4m-4 0h8',camera:'M3 7h4l2-3h6l2 3h4v14H3V7m9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8',star:'m12 3 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6',help:'M9 8a3 3 0 1 1 5 2c-2 1-2 2-2 4m0 4h.01M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20',arrow:'M5 12h14m-6-6 6 6-6 6'};
+ const icon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name]||paths.document}"/></svg>`;
+ const wrap=n=>((n%6)+6)%6;
+ function point(index,position){const offset=((index-position+9)%6+6)%6-3,angle=offset*Math.PI/3;return{x:200+172*Math.sin(angle),y:230-172*Math.cos(angle),visible:Math.abs(offset)<=1.45,offset};}
+ function markup(kind){return `<div class="dial" role="group" aria-label="整理方式"><div class="dial-stage"><svg class="dial-track" viewBox="0 0 400 260" aria-hidden="true"><path class="track-base" d="M28 230a172 172 0 0 1 344 0"/><path class="track-inner" d="M28 230a172 172 0 0 1 344 0"/>${Array.from({length:25},(_,i)=>{const a=(-90+i*7.5)*Math.PI/180;return `<path class="track-tick" d="M${200+167*Math.sin(a)} ${230-167*Math.cos(a)}L${200+177*Math.sin(a)} ${230-177*Math.cos(a)}"/>`;}).join('')}<path class="track-accent" d="M169 61a172 172 0 0 1 62 0"/></svg><span class="dial-pointer" aria-hidden="true"></span>${modes.map(([id,label,glyph])=>`<button type="button" class="dial-node mode-${id}${id===kind?' is-selected':''}" data-mode="${id}" aria-label="${label}" aria-pressed="${id===kind}"><span class="dial-bezel"><span class="dial-face">${icon(glyph)}</span></span><span class="dial-label">${label}</span></button>`).join('')}<button class="dial-arrow previous" type="button" aria-label="上一个整理功能">‹</button><button class="dial-arrow next" type="button" aria-label="下一个整理功能">›</button></div><span class="sr-only dial-announcement" role="status" aria-live="polite"></span></div>`;}
+ function mount(el,{kind='mindmap',onSelect=()=>{}}={}){
+  let target=Math.max(0,modes.findIndex(m=>m[0]===kind)),position=target,frame=0,drag=null,suppressClick=false,keyboardFocus=false;
+  el.tabIndex=-1;
+  const nodes=[...el.querySelectorAll('[data-mode]')],stage=el.querySelector('.dial-stage'),reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  let width=stage.clientWidth;
+  const resize=new ResizeObserver(entries=>{width=entries[0].contentRect.width;draw();});resize.observe(stage);
+  function draw(){nodes.forEach((node,i)=>{const p=point(i,position);node.style.left='0';node.style.top='0';node.style.transform=`translate(calc(${p.x*width/400}px - 50%),calc(${p.y*width/400}px - var(--node-radius)))`;node.style.opacity=p.visible?'1':'0';node.style.visibility=p.visible?'visible':'hidden';node.tabIndex=p.visible?0:-1;node.classList.toggle('is-selected',i===wrap(target));node.setAttribute('aria-pressed',String(i===wrap(target)));});}
+  function select(index,animate=true){cancelAnimationFrame(frame);target=index;const chosen=modes[wrap(index)];onSelect(chosen[0]);el.querySelector('.dial-announcement').textContent='已选择'+chosen[1];const start=position,delta=target-start,began=performance.now();
+   const focus=()=>{if(keyboardFocus&&el.contains(document.activeElement))nodes[wrap(target)].focus({preventScroll:true});};
+   if(!animate||reduce.matches){position=target;draw();focus();return;}
+   function step(now){if(!el.isConnected)return;const t=Math.min(1,(now-began)/320);position=start+delta*(1-Math.pow(1-t,3));draw();if(t<1)frame=requestAnimationFrame(step);else focus();}
+   frame=requestAnimationFrame(step);
+  }
+  el.addEventListener('click',e=>{keyboardFocus=false;if(suppressClick){suppressClick=false;return;}const node=e.target.closest('[data-mode]');if(node){const i=modes.findIndex(m=>m[0]===node.dataset.mode),diff=((i-wrap(target)+9)%6)-3;select(target+diff);}else if(e.target.closest('.previous'))select(target-1);else if(e.target.closest('.next'))select(target+1);});
+  el.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();keyboardFocus=true;el.focus({preventScroll:true});select(target+(e.key==='ArrowRight'?1:-1));}});
+  stage.addEventListener('pointerdown',e=>{keyboardFocus=false;if(e.button!==0||e.target.closest('.dial-arrow'))return;cancelAnimationFrame(frame);drag={id:e.pointerId,x:e.clientX,y:e.clientY,start:position,moved:false};});
+  stage.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(!drag.moved){if(Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>8){select(target);drag=null;return;}if(Math.abs(dx)<8)return;drag.moved=true;stage.setPointerCapture(e.pointerId);stage.classList.add('is-dragging');}position=drag.start-dx/(stage.clientWidth*.36);draw();});
+  function finish(e){if(!drag||drag.id!==e.pointerId)return;const moved=drag.moved;drag=null;stage.classList.remove('is-dragging');if(stage.hasPointerCapture(e.pointerId))stage.releasePointerCapture(e.pointerId);if(moved){suppressClick=true;setTimeout(()=>suppressClick=false,0);}select(Math.round(position));}
+  stage.addEventListener('pointerup',finish);stage.addEventListener('pointercancel',finish);
+  draw();return{selectKind(id){const i=modes.findIndex(m=>m[0]===id);if(i>=0)select(target+((i-wrap(target)+9)%6)-3);},destroy(){cancelAnimationFrame(frame);resize.disconnect();}};
+ }
+ return{modes,wrap,point,icon,markup,mount};
+});

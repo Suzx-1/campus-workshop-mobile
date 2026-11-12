@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-  const CURRENT='3b31575a5624cb55',BASE=new URL('./',document.currentScript.src);
+  const CURRENT='06dddfd496e83635',BASE=new URL('./',document.currentScript.src);
   let registration,pending=false,applying=false,checking=false,message='打开时自动检查更新';
   const css=document.createElement('link');css.rel='stylesheet';css.href=new URL('updates.css',BASE);document.head.append(css);
   const banner=document.createElement('aside');banner.className='campus-update';banner.hidden=true;banner.setAttribute('role','status');banner.innerHTML='<span>新版已准备好，更新后继续使用。</span><button data-campus-update="apply">立即更新</button><button data-campus-update="later">稍后</button>';document.body.append(banner);
