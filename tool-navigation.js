@@ -2,8 +2,7 @@
 (()=>{
   const script=document.currentScript,tool=script.dataset.campusTool,base=new URL('./',script.src),home=new URL('#library',base).href;
   let current=location.hash||(tool==='parking'?'#parking':'#home'),trail=[],moving=false,approvedExit=false;
-  const BACK='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M14.5 4.5 7 12l7.5 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const bar=document.createElement('div');bar.className='campus-navigation';bar.innerHTML=`<button type="button" id="campus-step-back" aria-label="返回上一级">${BACK}</button>${tool?'<span>逐层返回</span><a id="campus-exit-tool" href="'+home+'">退出工具</a>':''}`;
+  const bar=document.createElement('div');bar.className='campus-navigation';bar.innerHTML=`<button type="button" id="campus-step-back" aria-label="返回上一级">←</button>${tool?'<span>逐层返回</span><a id="campus-exit-tool" href="'+home+'">退出工具</a>':''}`;
   if(tool){document.body.prepend(bar);const old=document.querySelector('#workshop-back');if(old)old.hidden=true;const oldParking=document.querySelector('#workspace-link');if(oldParking)oldParking.hidden=true;}
   else document.querySelector('.header')?.prepend(bar);
   const style=document.createElement('link');style.rel='stylesheet';style.href=new URL('tool-navigation.css',base);document.head.append(style);
