@@ -1,3 +1,60 @@
-.campus-navigation{display:flex;align-items:center;gap:10px;background:#f5f4ef;color:#60705f;font:13px/1.5 "Segoe UI","Microsoft YaHei",sans-serif;padding:8px 16px;position:relative;z-index:20;border-bottom:1px solid #e2e4d9}.campus-navigation button{width:40px;height:36px;border:1px solid #ced7c3;border-radius:10px;background:#fffefa;color:#345d43;cursor:pointer;font-size:24px;line-height:1;flex-shrink:0}.campus-navigation a{margin-left:auto;color:#345d43;text-decoration:none;padding:8px 10px}.campus-navigation button:focus-visible,.campus-navigation a:focus-visible{outline:3px solid #a9c08c}.header>.campus-navigation{border:0;padding:0;margin-right:8px}.campus-navigation+#app{min-width:0}.campus-navigation~.layout .back[hidden]{display:none!important}#workspace-link[hidden]{display:none!important}
+/* 工具页顶部导航条 · 新拟态风格（白色 + 微暖底） */
+.campus-navigation {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(180deg, #FBF8EC, #F3EFE2);
+  color: #7A7059;
+  font: 13px/1.5 "Segoe UI", "Microsoft YaHei", sans-serif;
+  padding: 10px 16px;
+  position: relative; z-index: 20;
+}
 
-body>.campus-navigation{position:sticky;top:0}
+/* 返回箭头：压模实体按钮（顶部白棱 + 底部暗棱 + 实心台阶），按下内凹 */
+.campus-navigation button {
+  width: 46px; height: 46px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border: 1px solid rgba(255, 255, 255, .9); border-radius: 16px;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, .98), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(180deg, #FFFCF4, #F0E7CE);
+  color: #5E4A12;
+  cursor: pointer;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, .98),
+    inset 0 -3px 6px rgba(176, 148, 92, .28),
+    3px 4px 0 rgba(226, 210, 180, .6),
+    5px 6px 12px rgba(168, 150, 112, .30),
+    -5px -5px 10px rgba(255, 255, 255, .96);
+  transition: transform .15s, box-shadow .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.campus-navigation button:hover { transform: translateY(-2px); }
+.campus-navigation button:active {
+  transform: translateY(2px);
+  box-shadow: inset 5px 6px 12px rgba(168, 150, 112, .34), inset -4px -4px 10px rgba(255, 255, 255, .85);
+}
+.campus-navigation button svg {
+  display: block; stroke-width: 2.3;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .95)) drop-shadow(0 2px 2px rgba(150, 130, 90, .35));
+}
+.campus-navigation span { font-size: 12px; letter-spacing: .06em; margin-left: 2px; }
+
+.campus-navigation a {
+  margin-left: auto; color: #6B5A2E; text-decoration: none;
+  padding: 8px 12px; border-radius: 12px;
+  font-size: 12px;
+}
+.campus-navigation a:active { background: rgba(242, 193, 78, .16); }
+
+.campus-navigation button:focus-visible,
+.campus-navigation a:focus-visible { outline: 3px solid rgba(242, 193, 78, .6); outline-offset: 2px; }
+
+.header > .campus-navigation { border: 0; padding: 0; margin-right: 8px; background: transparent; }
+.campus-navigation + #app { min-width: 0; }
+.campus-navigation ~ .layout .back[hidden] { display: none !important; }
+#workspace-link[hidden] { display: none !important; }
+
+body > .campus-navigation {
+  position: sticky; top: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}

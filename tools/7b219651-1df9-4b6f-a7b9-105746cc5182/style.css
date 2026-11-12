@@ -6,3 +6,115 @@
 .photo-workbench{margin-bottom:24px}.photo-dimensions,.photo-crop{display:flex;flex-wrap:wrap;gap:10px;align-items:end}.photo-dimensions label,.photo-crop label{display:grid;gap:4px;max-width:100px}.photo-dimensions strong{flex-basis:100%}.photo-crop input,.photo-dimensions input{width:100%;border:1px solid var(--line);border-radius:6px;padding:7px;background:var(--card)}.photo-view{min-width:0;border:1px solid var(--line);padding:16px;border-radius:12px}.photo-view canvas{display:block;width:100%;height:auto;margin:12px 0;background:#e9eade}.photo-mask{display:grid;gap:3px;max-width:300px}.photo-mask button{aspect-ratio:1;border:1px solid #cbd5c0;border-radius:3px;color:#83977c;background:#f6f7ef;padding:0;min-width:0;font-size:12px}.photo-mask button.on{background:#afc896;color:#315332}.photo-upload{position:relative;overflow:hidden;display:inline-flex;cursor:pointer}.photo-upload input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}.photo-candidate{margin-top:18px;border-top:1px solid var(--line);padding-top:18px}.photo-view .small{overflow-wrap:anywhere}.cols-2,.voxel-grid.size-2{grid-template-columns:repeat(2,minmax(0,1fr))}.cols-3,.voxel-grid.size-3{grid-template-columns:repeat(3,minmax(0,1fr))}.cols-4,.voxel-grid.size-4{grid-template-columns:repeat(4,minmax(0,1fr))}.cols-5,.voxel-grid.size-5{grid-template-columns:repeat(5,minmax(0,1fr))}.cols-6,.voxel-grid.size-6{grid-template-columns:repeat(6,minmax(0,1fr))}.cols-7,.voxel-grid.size-7{grid-template-columns:repeat(7,minmax(0,1fr))}.cols-8,.voxel-grid.size-8{grid-template-columns:repeat(8,minmax(0,1fr))}.cols-9,.voxel-grid.size-9{grid-template-columns:repeat(9,minmax(0,1fr))}.cols-10,.voxel-grid.size-10{grid-template-columns:repeat(10,minmax(0,1fr))}.cols-11,.voxel-grid.size-11{grid-template-columns:repeat(11,minmax(0,1fr))}.cols-12,.voxel-grid.size-12{grid-template-columns:repeat(12,minmax(0,1fr))}
 
 #toast{pointer-events:none}
+
+/* ============================================================
+   NEO-BRUTALISM OVERRIDE · 知行学习中心
+   追加覆盖块（勿上移）：统一令牌与视觉样式，不改信息结构。
+   令牌与健康中心 / 停哪儿保持一致；无 CDN、无外链字体图片。
+   ============================================================ */
+:root{--ink:#0A0A0A;--blue:#2F6BFF;--blue-ink:#0A2A6B;--bg:#E9F0FF;--paper:#FFFFFF;--accent:#FFD34D;--danger:#FF5A5F;
+  /* 兼容既有变量名 */
+  --card:var(--paper);--line:var(--ink);--green:var(--blue);--tint:#DCE7FF;--muted:#3B4454}
+body{background:var(--bg);color:var(--ink)}
+a{color:var(--blue-ink)}
+h1,h2,h3{font-weight:800;letter-spacing:.2px}
+h1{font-size:34px;line-height:1.25;letter-spacing:1px}
+h2{font-size:20px;font-weight:800}
+h3{font-size:16px;font-weight:800}
+.subtitle,.note,.small,.hint,.footnote,.library-count{color:var(--muted)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.sidebar{background:var(--paper);border-right:2px solid var(--ink);padding:24px 20px}
+.brand{font-weight:800}
+.brand>span{background:var(--blue);border:2px solid var(--ink);border-radius:6px;box-shadow:3px 3px 0 var(--ink);color:#fff}
+.brand small{color:var(--blue-ink);font-weight:700}
+.side-label,.side-foot{color:var(--muted)}
+nav a{border:2px solid transparent;border-radius:5px;color:var(--ink);font-weight:600}
+nav a:hover{background:var(--tint);border-color:var(--ink)}
+nav a.active{background:var(--blue);border-color:var(--ink);color:#fff;box-shadow:3px 3px 0 var(--ink)}
+.top{border-bottom:2px solid var(--ink);color:var(--ink);font-weight:600}
+.local-dot:before{background:var(--blue)}
+#main{padding:32px 40px 50px}
+.page-head{margin-bottom:22px}
+.eyebrow{color:var(--ink);font-weight:800;letter-spacing:2px}
+.hero{background:var(--paper);border:2px solid var(--ink);border-radius:6px;box-shadow:6px 6px 0 var(--ink)}
+.hero h2{font-size:28px}
+.hero p{color:var(--muted)}
+.button,button.primary{background:var(--blue);border:2px solid var(--ink);border-radius:5px;box-shadow:3px 3px 0 var(--ink);color:#fff;font-weight:700;text-decoration:none;transition:transform .08s ease,box-shadow .08s ease}
+.button:hover,button.primary:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.button:active,button.primary:active{transform:translate(3px,3px);box-shadow:none}
+.button.secondary,button.secondary{background:var(--paper);border:2px solid var(--ink);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+button.ghost{border:2px solid var(--ink);border-radius:5px;background:var(--paper);color:var(--ink);box-shadow:2px 2px 0 var(--ink);font-weight:600;transition:transform .08s ease,box-shadow .08s ease}
+button.ghost:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+button.ghost:active{transform:translate(2px,2px);box-shadow:none}
+button:disabled,.button:disabled{opacity:.55;box-shadow:none;transform:none;cursor:wait}
+.actions{gap:10px}
+.panel,.course,.task,.note-card{border:2px solid var(--ink);border-radius:5px;box-shadow:4px 4px 0 var(--ink);background:var(--paper)}
+.panel.soft{background:var(--tint)}
+.course p{color:var(--muted)}
+.tool-mark{background:var(--accent);border:2px solid var(--ink);border-radius:5px;color:var(--ink);font-weight:800}
+.tag,.hub-status{background:var(--accent);border:2px solid var(--ink);border-radius:4px;color:var(--ink);font-weight:700;padding:2px 7px}
+.tag.ready{background:var(--accent);color:var(--ink)}
+.chip{border:2px solid var(--ink);border-radius:4px;background:var(--paper);color:var(--ink);font-weight:600;padding:4px 11px}
+.chip.active{background:var(--blue);color:#fff;border-color:var(--ink)}
+.field{color:var(--ink)}
+input:not([type=checkbox]):not([type=range]),textarea,select{background:var(--paper);border:2px solid var(--ink);border-radius:4px;color:var(--ink);box-shadow:2px 2px 0 var(--ink)}
+input:not([type=checkbox]):not([type=range]):focus,textarea:focus,select:focus{outline:3px solid var(--blue);outline-offset:1px;box-shadow:none}
+input[type=checkbox]{accent-color:var(--blue);width:18px;height:18px}
+input[type=range]{accent-color:var(--blue)}
+.section-head{border-bottom:2px solid var(--ink);padding-bottom:8px}
+.tabs{border-bottom:2px solid var(--ink)}
+.tabs button{border:2px solid transparent;border-radius:4px;color:var(--ink);font-weight:600}
+.tabs button.active{background:var(--blue);border-color:var(--ink);color:#fff;box-shadow:2px 2px 0 var(--ink)}
+.plot,.scene,.map{background:var(--paper);border:2px solid var(--ink);border-radius:5px}
+.controls label,.axis-label{color:var(--muted)}
+.metric{background:var(--tint);border:2px solid var(--ink);border-radius:5px;box-shadow:4px 4px 0 var(--ink)}
+.metric b{color:var(--blue-ink);font-weight:800}
+.metric span{color:var(--muted)}
+.explain{background:#F2F5FF;border:2px solid var(--ink);border-left:6px solid var(--blue);border-radius:5px;color:var(--ink)}
+.result,.feedback{background:var(--paper);border:2px solid var(--ink);border-radius:5px;box-shadow:4px 4px 0 var(--ink)}
+.feedback.wrong{background:#FFE9EA}
+.banner{background:var(--accent);border:2px solid var(--ink);border-radius:5px;box-shadow:4px 4px 0 var(--ink);color:var(--ink)}
+.banner.warn{background:#FFE1E2}
+.stats b{color:var(--blue-ink);font-weight:800}
+.stats small{color:var(--muted)}
+.empty{border:2px dashed var(--ink);border-radius:5px;background:var(--paper)}
+.task input{accent-color:var(--blue)}
+.answer-options label{border:2px solid var(--ink);border-radius:4px}
+.answer-options label:hover{background:var(--tint)}
+.projection{border:2px solid var(--ink);border-radius:4px;background:var(--paper)}
+.hub-table-wrap{border:2px solid var(--ink);border-radius:5px;box-shadow:4px 4px 0 var(--ink);background:var(--paper)}
+.hub-table th,.hub-table td{border-bottom:2px solid var(--ink)}
+.hub-table th{color:var(--muted)}
+dialog{border:2px solid var(--ink);border-radius:6px;box-shadow:8px 8px 0 var(--ink);background:var(--paper)}
+dialog::backdrop{background:#0A0A0A66}
+.dialog-top{border-bottom:2px solid var(--ink);padding-bottom:10px}
+.close{border:2px solid var(--ink);border-radius:4px;background:var(--paper);color:var(--ink);width:34px;height:34px;font-size:20px;font-weight:800;line-height:1}
+#toast{background:var(--ink);color:#fff;border:2px solid var(--ink);border-radius:5px;box-shadow:4px 4px 0 var(--blue)}
+#toast.error{background:var(--danger);color:var(--ink)}
+#hub-connection,#hub-profile-status,#hub-search-status{color:var(--blue-ink)}
+.review-front{border:2px solid var(--ink);border-radius:5px;background:var(--paper)}
+.review-back{background:var(--tint);border:2px solid var(--ink);border-radius:5px}
+.source,.file-row{border-bottom:2px solid var(--line)}
+.check-grid label{font-weight:600}
+/* 首页专属：首页已在最顶层，“返回上一级”与退出重复，隐藏；退出保留“退出工具” */
+body.route-home .campus-navigation #campus-step-back,body.route-home .campus-navigation>span{display:none}
+body.route-home .campus-navigation{padding:6px 16px}
+body.route-home #main{padding-bottom:32px}
+@media(max-width:1000px){.layout{grid-template-columns:185px 1fr}#main{padding:26px 24px 50px}.top{padding:0 24px}h1{font-size:30px}}
+@media(max-width:650px){.sidebar{background:var(--bg);padding:10px 16px 0;border-right:0}.brand>span{width:38px;height:42px;box-shadow:2px 2px 0 var(--ink)}nav a{padding:7px 10px}nav a.active{box-shadow:2px 2px 0 var(--ink)}#main{padding:20px 16px 60px}h1{font-size:25px}h2{font-size:18px}.page-head{margin-bottom:14px}.panel{padding:18px}body.route-home .layout{min-height:0}body.route-home .brand{margin:8px 0}body.route-home #main{padding:12px 16px 20px}}
+
+/* NEO-BRUTALISM · 顶栏与整屏高度（tool-navigation 注入，需更高优先级） */
+body .campus-navigation{background:var(--bg);border-bottom:2px solid var(--ink);color:var(--ink)}
+body .campus-navigation button{background:var(--paper);border:2px solid var(--ink);border-radius:5px;color:var(--ink);box-shadow:2px 2px 0 var(--ink);transition:transform .08s ease,box-shadow .08s ease}
+body .campus-navigation button:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+body .campus-navigation button:active{transform:translate(2px,2px);box-shadow:none}
+body .campus-navigation a{color:var(--blue-ink);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+@media(min-width:651px){body.route-home .layout{min-height:calc(100vh - 50px)}body.route-home .sidebar{height:calc(100vh - 50px)}}
+
+/* NEO-BRUTALISM · 低对比度文字收口（不低于、并小幅优于原样式） */
+.empty{color:var(--muted)}
+.empty h3{color:var(--ink)}
+.note-card pre{color:var(--muted)}
+.axis-label{fill:var(--muted)}
+.source-badge{color:var(--muted);border:1px solid var(--ink);border-radius:3px;padding:1px 4px;display:inline-block}
+@media(max-width:650px){.sidebar nav{border-bottom:2px solid var(--ink)}}
