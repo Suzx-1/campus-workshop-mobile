@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#DCE8FF">
+<title>晴空物语 · 校园工坊</title>
+<link rel="icon" href="../../icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div class="topbar-row">
+      <a class="back" href="../../#library" aria-label="返回校园工坊功能库">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 18l-6-6 6-6"/></svg>
+        <span>返回功能库</span>
+      </a>
+      <div class="top-actions">
+        <button type="button" class="btn" data-action="export-data" aria-label="导出全部数据为 JSON 备份">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          <span>导出备份</span>
+        </button>
+        <button type="button" class="btn" data-action="import-data" aria-label="从 JSON 备份导入数据">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21V9m0 0l-4 4m4-4l4 4M5 3h14"/></svg>
+          <span>导入备份</span>
+        </button>
+      </div>
+    </div>
+    <div class="brand">
+      <span class="logo" aria-hidden="true">晴</span>
+      <div class="brand-text">
+        <h1>晴空物语</h1>
+        <p>课程、目标、训练、活动与阅读，把校园生活放在一处。</p>
+      </div>
+      <span class="local-badge">本机保存</span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="晴空物语功能页签">
+    <a href="#overview" class="tab" data-tab="overview">概览</a>
+    <a href="#courses" class="tab" data-tab="courses">课程表</a>
+    <a href="#goals" class="tab" data-tab="goals">目标</a>
+    <a href="#workouts" class="tab" data-tab="workouts">训练</a>
+    <a href="#activities" class="tab" data-tab="activities">活动</a>
+    <a href="#reading" class="tab" data-tab="reading">阅读</a>
+  </nav>
+
+  <div id="data-warning" hidden></div>
+
+  <main id="main" tabindex="-1">
+    <p class="loading">正在打开晴空物语…</p>
+  </main>
+
+  <footer class="foot">
+    <p>所有数据只保存在当前浏览器的 localStorage（qingkong.v1）。换设备、换浏览器或清理浏览器数据前，请先导出备份。</p>
+  </footer>
+</div>
+
+<dialog id="dialog" aria-labelledby="dialog-title">
+  <div class="dialog-head">
+    <h2 id="dialog-title">编辑</h2>
+    <button type="button" class="icon-btn" data-action="close-dialog" aria-label="关闭弹窗">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="dialog-body" id="dialog-body"></div>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<input type="file" id="import-file" accept=".json,application/json" hidden>
+
+<script src="app.js"></script>
+<script src="../../updates.js"></script></body>
+</html>
